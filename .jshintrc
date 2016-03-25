@@ -1,0 +1,6 @@
+{
+  "esnext": true,
+  "undef": true,
+  "browser": true,
+  "predef": [ "d3" ]
+}
