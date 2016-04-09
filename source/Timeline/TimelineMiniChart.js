@@ -19,6 +19,8 @@ export default class TimelineMiniChart {
 
     this.drawSeries();
 
+    this.updateAxes();
+
     // this.bindScrollEvents();
   }
 
@@ -29,7 +31,7 @@ export default class TimelineMiniChart {
   makeScales() {
     const svgWidth  = parseFloat(this.mainChart.svg.attr('width'), 10);
     const svgHeight = parseFloat(this.mainChart.svg.attr('height'), 10);
-    const { containerWidth } = this.parent.node().getBoundingClientRect();
+    const { width:containerWidth } = this.parent.node().getBoundingClientRect();
 
     this.timescale = this.mainChart.scale.copy().range([0, containerWidth]);
     this.xscale = d3.scale.linear().domain([0, svgWidth]).range([0, containerWidth]);
@@ -57,14 +59,12 @@ export default class TimelineMiniChart {
   makeAxis() {
     this.axis = d3.svg.axis()
       .scale(this.timescale)
-      // .ticks(50)
-      .orient("bottom")
       .tickSize(0,0)
       .tickFormat(d => d.getUTCFullYear()) // avoid things like -0800
-      .tickPadding(-6);
+      .tickPadding(0);
 
     this.axisGroup = this.svg.append('g')
-      .classed('x axis', true)
+      .classed('time axis', true)
       .call(this.axis);
   }
 
@@ -73,4 +73,33 @@ export default class TimelineMiniChart {
 
     // draw a line for each event
   }
+
+  updateAxes() {
+    this.fitAxisLabels();
+  }
+
+  fitAxisLabels() {
+    // Ensure far left/far right fit on screen
+    const bbox = this.axisGroup.node().getBBox();
+
+    if (bbox.x < 0) {
+      // left needs to be pushed in
+      _getNthTickText(this.axisGroup.node(), 0).style['text-anchor'] = "start";
+    }
+    if (bbox.width > this.svg.node().width.baseVal.value) {
+      // right needs to be pushed in
+      _getNthTickText(this.axisGroup.node(), -1).style['text-anchor'] = "end";
+    }
+  }
+}
+
+/**
+ * Get the text element of the nth tick
+ * @param  {SVGElement} el the axis element containing the ticks
+ * @param  {Number} n the index to get. Negatives are removed from end. Must be in range!
+ * @return {SVGELement|Null} the nth tick text element
+ */
+function _getNthTickText(axis, n) {
+  if(n < 0) n = axis.children.length + n - 1; // -1 for path
+  return axis.children[n].children[1];
 }
