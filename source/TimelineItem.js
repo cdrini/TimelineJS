@@ -76,14 +76,14 @@ function drawRangeItem(item, accessors, groupEl, scale, opts) {
   group.append('rect')
     .attr({
       x: 0, y: 1,
-      width:  scale(accessors.end(item)) - scale(accessors.start(item)),
+      width:  (scale(accessors.end(item)) - scale(accessors.start(item))).toFixed(2),
       height: opts.itemHeight - 2
     });
 
   // Item text
   group.append('text')
     .attr({
-      x: (scale(accessors.end(item)) - scale(accessors.start(item)))/2,
+      x: ((scale(accessors.end(item)) - scale(accessors.start(item)))/2).toFixed(2),
       y: opts.itemHeight / 2
     })
     .append('tspan')

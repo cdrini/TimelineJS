@@ -85,6 +85,7 @@ export default class TimelineMainChart {
 
   tightwrapViewBox() {
     const bbox = extentBBox(this.svg.node().children);
+    for(const k in bbox) bbox[k] = bbox[k].toFixed(2);
     this.svg.attr({
       viewBox: `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`,
       width: bbox.width,

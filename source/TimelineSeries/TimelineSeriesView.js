@@ -103,5 +103,5 @@ function _itemTransform(seriesView, item, group) {
     }
   }
 
-  return `translate(${itemStart}, ${finalY})`;
+  return `translate(${itemStart.toFixed(2)}, ${finalY})`;
 }
