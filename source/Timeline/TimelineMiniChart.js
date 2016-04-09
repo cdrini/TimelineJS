@@ -46,9 +46,9 @@ export default class TimelineMiniChart {
 
   makeSVG() {
     this.svg = this.container.append('svg')
-      .attr("version", 1.1)
-      .attr("xmlns", "http://www.w3.org/2000/svg")
       .attr({
+        version: 1.1,
+        xmlns: "http://www.w3.org/2000/svg",
         width: '100%',
         height: this.opts.miniChartHeight
       });
