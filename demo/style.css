@@ -5,7 +5,8 @@
 
 .tjs-container .tjs-mini                  { width: 100%; position: absolute; bottom: 0; left: 0; line-height: 0; background-color: #FCFCFC; cursor: move; }
 .tjs-container .tjs-mini path.tjs-items   { stroke: #FEA; shape-rendering: crispEdges; }
-.tjs-container .tjs-mini .viewfield       { fill: #08D; fill-opacity: 0.1; stroke: #08E; stroke-width: 1px; shape-rendering: crispEdges; }
+.tjs-container .tjs-mini .viewfield       { fill: #08D; fill-opacity: 0.1; stroke: #08E; stroke-width: 1px; stroke-dasharray: 5,2; shape-rendering: crispEdges; cursor: -webkit-grab; cursor: grab; }
+.tjs-container .tjs-mini .viewfield:active{ stroke-dasharray: 0; cursor: -webkit-grabbing; cursor: grabbing; }
 .tjs-container .tjs-mini .axis .tick text { font-family: "Roboto Light"; }
 
 .tjs-container .tjs-main                  { width: 100%; height: 100%; overflow: auto; font-family: Roboto, sans-serif; }

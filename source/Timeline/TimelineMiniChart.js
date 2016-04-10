@@ -18,15 +18,17 @@ export default class TimelineMiniChart {
 
     this.makeContainer();
     this.makeSVG();
+
     this.drawSeries();
-    this.makeViewFieldRect();
     this.makeAxis();
+    this.makeViewFieldRect();
 
 
     this.updateAxes();
     this.updateViewFieldRect();
 
     this.bindScrollEvents();
+    this.bindDragEvents();
   }
 
   makeRoom() {
@@ -153,7 +155,70 @@ export default class TimelineMiniChart {
   }
 
   bindScrollEvents() {
-    this.timelineView.mainChart.container.on('scroll', throttle(this.updateViewFieldRect.bind(this), 50));
+    this.throttledScrollHandler = this.throttledScrollHandler || throttle(this.updateViewFieldRect.bind(this), 50);
+    this.timelineView.mainChart.container.on('scroll', this.throttledScrollHandler);
+  }
+
+  unbindScrollEvents() {
+    this.timelineView.mainChart.container.on('scroll', null);
+  }
+
+  bindDragEvents() {
+    const { svg, viewFieldRect } = this;
+    const { miniChartHeight } = this.opts;
+    const miniChartWidth = svg.node().width.baseVal.value;
+    const mainChartContainer = this.timelineView.mainChart.container;
+    const { xScale, yScale } = this;
+    const miniChart = this;
+    let mouseToBoxRatio = { x: 0.5, y: 0.5 }; // where the mouse is in the box
+
+    svg.on('mousedown', startDrag);
+    svg.on('touchstart', startDrag);
+
+    function startDrag() {
+      miniChart.unbindScrollEvents();
+      if (d3.event.target == viewFieldRect.node()) {
+        const mouse = d3.mouse(viewFieldRect.node());
+        mouseToBoxRatio.x = (mouse[0] - viewFieldRect.attr('x')) / viewFieldRect.attr('width');
+        mouseToBoxRatio.y = (mouse[1] - viewFieldRect.attr('y')) / viewFieldRect.attr('height');
+      } else {
+        mouseToBoxRatio = { x: 0.5, y: 0.5 };
+      }
+
+      dragMain();
+      d3.select(document).on('mousemove.tjs', dragMain);
+      d3.select(document).on('touchmove.tjs', dragMain);
+
+      d3.select(document).on('mouseup.tjs',    endDrag);
+      d3.select(document).on('touchend.tjs',   endDrag);
+    }
+
+    function dragMain() {
+      const mousePos = d3.mouse(svg.node());
+
+      const boxPos = {
+        x: mousePos[0] - mouseToBoxRatio.x * viewFieldRect.attr('width'),
+        y: mousePos[1] - mouseToBoxRatio.y * viewFieldRect.attr('height')
+      };
+      boxPos.x = Math.min(boxPos.x, miniChartWidth - viewFieldRect.attr('width') - 2);
+      boxPos.y = Math.min(boxPos.y, miniChartHeight - viewFieldRect.attr('height') - 2);
+      boxPos.x = Math.max(0, boxPos.x);
+      boxPos.y = Math.max(0, boxPos.y);
+
+      viewFieldRect.attr({
+        x: boxPos.x.toFixed(2),
+        y: boxPos.y.toFixed(2)
+      });
+
+      mainChartContainer.node().scrollTop = yScale.invert(boxPos.y);
+      mainChartContainer.node().scrollLeft = xScale.invert(boxPos.x);
+    }
+
+    function endDrag() {
+      miniChart.bindScrollEvents();
+      d3.select(document).on('mousemove.tjs', null);
+      d3.select(document).on('touchmove.tjs', null);
+    }
   }
 }
 
