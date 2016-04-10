@@ -35,6 +35,17 @@ export function identity(x) {
 }
 
 /**
+ * Bound val between lo and hi
+ * @param {Number} val the number to be bounded
+ * @param {Number} lo  lower bound
+ * @param {Number} hi  upper bound
+ * @return {Number} the bounded number
+ */
+export function BOUND(val, lo, hi) {
+  return Math.max(lo, Math.min(val, hi));
+}
+
+/**
  * Ensures the provided function is never executed more than once every 400 ms
  * (or whatever is provided). Useful as a scroll/resize event handler.
  * @param  {Function} fn      the thing we want to limit calls for

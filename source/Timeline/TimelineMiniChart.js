@@ -1,4 +1,4 @@
-import { ASC, identity, throttle } from "../utils";
+import { ASC, BOUND, identity, throttle } from "../utils";
 
 const ROW_HEIGHT = 5; // px
 const ROW_PADDING = 2; // px;
@@ -124,15 +124,22 @@ export default class TimelineMiniChart {
 
   updateViewFieldRect() {
     const mainChart = this.timelineView.mainChart.container.node();
-    let {width, height} = mainChart.getBoundingClientRect(); // FIXME use 'cached' values
-    width = Math.min(width, this.timelineView.mainChart.svg.node().width.baseVal.value);
+    const miniChartDims = {
+      width: this.svg.node().width.baseVal.value,
+      height: this.opts.miniChartHeight
+    };
+    const mainChartDims = mainChart.getBoundingClientRect(); // FIXME use 'cached' values
+    const rectWidth = Math.min(this.xScale(mainChartDims.width), miniChartDims.width);
+    const rectHeight = Math.min(this.yScale(mainChartDims.height), miniChartDims.height);
+    const rectX = BOUND(this.xScale(mainChart.scrollLeft), 0, miniChartDims.width - rectWidth);
+    const rectY = BOUND(this.yScale(mainChart.scrollTop), 0, miniChartDims.height - rectHeight);
     // FIXME: This is wrong, since it includes the size of the xaxis
 
     this.viewFieldRect.attr({
-      x: this.xScale(mainChart.scrollLeft),
-      y: this.yScale(mainChart.scrollTop),
-      width: this.xScale(width).toFixed(2) - 1,
-      height: Math.min(this.yScale(height), this.opts.miniChartHeight).toFixed(2) - 1
+      x: rectX.toFixed(2),
+      y: rectY.toFixed(2),
+      width: (rectWidth - 1).toFixed(2),
+      height: (rectHeight - 1).toFixed(2)
     });
   }
 
