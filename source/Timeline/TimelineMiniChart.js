@@ -1,4 +1,7 @@
-import {extentBBox, time} from "../utils";
+import { ASC, identity } from "../utils";
+
+const ROW_HEIGHT = 5; // px
+const ROW_PADDING = 2; // px;
 
 export default class TimelineMiniChart {
   constructor(timelineView) {
@@ -15,9 +18,8 @@ export default class TimelineMiniChart {
 
     this.makeContainer();
     this.makeSVG();
-    this.makeAxis();
-
     this.drawSeries();
+    this.makeAxis();
 
     this.updateAxes();
 
@@ -33,9 +35,9 @@ export default class TimelineMiniChart {
     const svgHeight = parseFloat(this.mainChart.svg.attr('height'), 10);
     const { width:containerWidth } = this.parent.node().getBoundingClientRect();
 
-    this.timescale = this.mainChart.scale.copy().range([0, containerWidth]);
-    this.xscale = d3.scale.linear().domain([0, svgWidth]).range([0, containerWidth]);
-    this.yscale = d3.scale.linear().domain([0, svgHeight]).range([0, this.opts.miniChartHeight]);
+    this.timeScale = this.mainChart.scale.copy().range([0, containerWidth]);
+    this.xScale = d3.scale.linear().domain([0, svgWidth]).range([0, containerWidth]);
+    this.yScale = d3.scale.linear().domain([0, svgHeight]).range([0, this.opts.miniChartHeight]);
   }
 
   makeContainer() {
@@ -58,20 +60,57 @@ export default class TimelineMiniChart {
 
   makeAxis() {
     this.axis = d3.svg.axis()
-      .scale(this.timescale)
+      .scale(this.timeScale)
       .tickSize(0,0)
       .tickFormat(d => d.getUTCFullYear()) // avoid things like -0800
       .tickPadding(0);
 
     this.axisGroup = this.svg.append('g')
       .classed('time axis', true)
+      .attr('transform', `translate(0, ${this.opts.miniChartHeight/2})`)
       .call(this.axis);
   }
 
   drawSeries() {
-    this.seriesPath = this.svg.append('path');
+    this.seriesPath = this.svg.append('path').classed('tjs-items', true);
+    const { seriesViews } = this.timelineView.mainChart;
+    this.rowCount = Math.floor(this.opts.miniChartHeight / ROW_HEIGHT);
+    this.rowHeight = this.opts.miniChartHeight / this.rowCount;
+
+    const seriesRows = seriesViews[0].stacks.rows;
+    const rowRatio = seriesRows.length / this.rowCount;
+    if (rowRatio < 1) {
+      // Each miniRow map to less than one row :/ Increase the rowHeight to fill
+      // the view
+      this.rowCount = seriesRows.length;
+      this.rowHeight = this.opts.miniChartHeight / this.rowCount;
+      this.rows = seriesRows;
+    } else if (rowRatio == 1) {
+      this.rows = seriesRows;
+    } else if (rowRatio > 1) {
+      // we need to merge the rows
+      this.rows = _condenseRows(seriesRows, this.rowCount);
+    }
 
     // draw a line for each event
+    let pathD = '';
+    for(let i = 0; i < this.rows.length; ++i) pathD += this.drawRow(i);
+    this.seriesPath.attr({
+      d: pathD,
+      'stroke-width': (this.rowHeight - ROW_PADDING).toFixed(2)
+    });
+  }
+
+  drawRow(i) {
+    const row = this.rows[i];
+    const yPos = this.opts.miniChartHeight - this.rowHeight * i - this.rowHeight / 2;
+    let path = "";
+    for(let j = 0; j < row.length; ++j) {
+      const start = this.xScale(row[j].start),
+            end = this.xScale(row[j].end);
+      path += ` M ${start.toFixed(2)},${yPos.toFixed(2)} H ${end.toFixed(2)}`;
+    }
+    return path;
   }
 
   updateAxes() {
@@ -102,4 +141,39 @@ export default class TimelineMiniChart {
 function _getNthTickText(axis, n) {
   if(n < 0) n = axis.children.length + n - 1; // -1 for path
   return axis.children[n].children[1];
+}
+
+/**
+ * Condenses rows of ranges into n rows
+ * @param  {Array[]} rows  Array of array of ranges
+ * @param  {Number} n the length of the new array
+ * @return {Array[]} new array with the desired length
+ */
+function _condenseRows(rows, n) {
+  const ratio = rows.length / n;
+  const result = [];
+
+  for(let i = 0; i < rows.length; i += ratio) {
+    const newRow = [];
+
+    // get the elements from the next desired rows
+    for(let j = Math.floor(i); j < Math.floor(i+ratio); ++j) {
+      for(let k = 0; k < rows[j].length; ++k) {
+        newRow.push({ start: rows[j][k].start, end: rows[j][k].end });
+      }
+    }
+
+    // merge any consecutive ranges that can be merge (greedy alg!)
+    newRow.sort(ASC('start'));
+    for(let j = 1; j < newRow.length; ++j) {
+      if (newRow[j].start <= newRow[j-1].end) {
+        newRow[j].start = newRow[j-1].start;
+        newRow[j].end = Math.max(newRow[j].end, newRow[j-1].end);
+        newRow[j-1] = null;
+      }
+    }
+
+    result.push(newRow.filter(identity));
+  }
+  return result;
 }

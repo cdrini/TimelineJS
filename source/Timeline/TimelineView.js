@@ -10,6 +10,6 @@ export default class TimelineView {
       .classed('tjs-container', true);
 
     this.mainChart = new TimelineMainChart(this);
-    this.miniChart = new TimelineMiniChart(this, this.mainChart);
+    this.miniChart = new TimelineMiniChart(this);
   }
 }

@@ -3,6 +3,38 @@ export const time = {
 };
 
 /**
+ * Numeric Array.sort function which returns results in ascending order.
+ * @param {String} [key] if sorting objects, supply the key to use
+ * @example [5,2,1,4].sort(ASC);
+ * @example [{x:3},{x:5},{x:1},{x:9}].sort(ASC('x'))
+ */
+export function ASC(key) {
+  if (arguments.length == 2) return arguments[0] - arguments[1];
+  else return function(a, b) { return a[key] - b[key]; };
+}
+
+/**
+ * Numeric Array.sort function which returns results in descending order.
+ * @param {String} [key] if sorting objects, supply the key to use
+ * @example [5,2,1,4].sort(DESC);
+ * @example [{x:3},{x:5},{x:1},{x:9}].sort(DESC('x'))
+ */
+export function DESC(key) {
+  if (arguments.length == 2) return arguments[1] - arguments[0];
+  else return function(a, b) { return b[key] - a[key]; };
+}
+
+/**
+ * Returns what you give
+ * @param  {*} x
+ * @return {*}
+ * @example [null, false, true, 34].filter(identity) == [true,34]
+ */
+export function identity(x) {
+  return x;
+}
+
+/**
  * @param  {Date|number} [date]
  * @return {number} returns NaN on exceptional cases.
  */

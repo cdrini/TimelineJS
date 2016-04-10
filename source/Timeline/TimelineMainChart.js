@@ -6,6 +6,7 @@ export default class TimelineMainChart {
     this.opts = this.timeline.opts;
     this.parent = timelineView.container;
     this.series = this.timeline.series;
+    this.seriesViews = [];
 
     this.makeScale();
 
@@ -66,7 +67,7 @@ export default class TimelineMainChart {
 
   drawSeries() {
     this.seriesGroup = this.svg.append('g');
-    this.timeline.series[0].draw(this.scale, this.seriesGroup.node(), this.opts);
+    this.seriesViews[0] = this.timeline.series[0].draw(this.scale, this.seriesGroup.node(), this.opts);
   }
 
   updateAxes() {
