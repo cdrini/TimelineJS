@@ -14,6 +14,8 @@
 .tjs-container .tjs-main .tjs-item circle { fill: #FD5; }
 .tjs-container .tjs-main .tjs-item circle { stroke: #C92; }
 .tjs-container .tjs-main .tjs-item text   { font-size: 12px; }
-.tjs-container .tjs-main .axis .tick text { font-family: Roboto, sans-serif; font-weight: 300; }
-.tjs-container .tjs-main .axis .tick line { stroke-width: 1px; shape-rendering: crispEdges; stroke: #000; }
 .tjs-container .tjs-main .tjs-grid .tick line { stroke-width: 1px; stroke: rgba(0,0,0,0.05); shape-rendering: crispEdges; }
+
+.tjs-container .tjs-axis                  { position: absolute; left: 0; line-height: 0; }
+.tjs-container .tjs-axis .axis .tick text { font-family: Roboto, sans-serif; font-weight: 300; }
+.tjs-container .tjs-axis .axis .tick line { stroke-width: 1px; shape-rendering: crispEdges; stroke: #000; }

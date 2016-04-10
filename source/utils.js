@@ -46,6 +46,20 @@ export function BOUND(val, lo, hi) {
 }
 
 /**
+ * Change an SVG's viewbox to match it's children
+ * @param  {D3Select} svg the svg element
+ */
+export function tightwrapViewBox(svg) {
+  const bbox = extentBBox(svg.node().children);
+  for(const k in bbox) bbox[k] = bbox[k].toFixed(2);
+  svg.attr({
+    viewBox: `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`,
+    width: bbox.width,
+    height: bbox.height
+  });
+}
+
+/**
  * Ensures the provided function is never executed more than once every 400 ms
  * (or whatever is provided). Useful as a scroll/resize event handler.
  * @param  {Function} fn      the thing we want to limit calls for

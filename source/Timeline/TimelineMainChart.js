@@ -1,4 +1,4 @@
-import {extentBBox, time} from "../utils";
+import { tightwrapViewBox, time } from "../utils";
 
 export default class TimelineMainChart {
   constructor(timelineView) {
@@ -12,12 +12,11 @@ export default class TimelineMainChart {
 
     this.makeContainer();
     this.makeSVG();
-    this.makeAxis();
     this.makeGrid();
 
     this.drawSeries();
-    this.updateAxes();
-    this.tightwrapViewBox();
+    this.updateGrid();
+    tightwrapViewBox(this.svg);
   }
 
   makeScale() {
@@ -38,20 +37,6 @@ export default class TimelineMainChart {
       .attr("xmlns", "http://www.w3.org/2000/svg");
   }
 
-  makeAxis() {
-    this.axis = d3.svg.axis()
-      .scale(this.scale)
-      // .ticks(50)
-      .orient("bottom")
-      .tickSize(8,4)
-      .tickFormat(d => d.getUTCFullYear()) // avoid things like -0800
-      .tickPadding(4);
-
-    this.axisGroup = this.svg.append('g')
-      .classed('x axis', true)
-      .call(this.axis);
-  }
-
   makeGrid() {
     this.gridAxis = d3.svg.axis()
       .scale(this.scale)
@@ -70,7 +55,7 @@ export default class TimelineMainChart {
     this.seriesViews[0] = this.timeline.series[0].draw(this.scale, this.seriesGroup.node(), this.opts);
   }
 
-  updateAxes() {
+  updateGrid() {
     const { scale, svg } = this;
     const pad = this.opts.padding;
 
@@ -81,16 +66,5 @@ export default class TimelineMainChart {
 
     this.gridAxis.tickSize(-1*bbox.height, 0);
     this.gridGroup.call(this.gridAxis);
-    this.axisGroup.call(this.axis);
-  }
-
-  tightwrapViewBox() {
-    const bbox = extentBBox(this.svg.node().children);
-    for(const k in bbox) bbox[k] = bbox[k].toFixed(2);
-    this.svg.attr({
-      viewBox: `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`,
-      width: bbox.width,
-      height: bbox.height
-    });
   }
 }

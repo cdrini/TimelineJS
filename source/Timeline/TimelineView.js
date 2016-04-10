@@ -1,5 +1,6 @@
 import TimelineMainChart from "./TimelineMainChart.js";
 import TimelineMiniChart from "./TimelineMiniChart.js";
+import TimelineAxis from "./TimelineAxis.js";
 
 export default class TimelineView {
   constructor(timeline) {
@@ -11,5 +12,6 @@ export default class TimelineView {
 
     this.mainChart = new TimelineMainChart(this);
     this.miniChart = new TimelineMiniChart(this);
+    this.axis = new TimelineAxis(this);
   }
 }

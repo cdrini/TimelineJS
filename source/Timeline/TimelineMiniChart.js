@@ -133,7 +133,6 @@ export default class TimelineMiniChart {
     const rectHeight = Math.min(this.yScale(mainChartDims.height), miniChartDims.height);
     const rectX = BOUND(this.xScale(mainChart.scrollLeft), 0, miniChartDims.width - rectWidth);
     const rectY = BOUND(this.yScale(mainChart.scrollTop), 0, miniChartDims.height - rectHeight);
-    // FIXME: This is wrong, since it includes the size of the xaxis
 
     this.viewFieldRect.attr({
       x: rectX.toFixed(2),
