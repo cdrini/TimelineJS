@@ -35,6 +35,31 @@ export function identity(x) {
 }
 
 /**
+ * Ensures the provided function is never executed more than once every 400 ms
+ * (or whatever is provided). Useful as a scroll/resize event handler.
+ * @param  {Function} fn      the thing we want to limit calls for
+ * @param  {number}   [ms=50] how frequently the fn can be executed
+ * @return {Function}         the handler
+ */
+export function throttle(fn, ms=50) {
+  let timer = null;
+  let context = this,
+      args = [];
+  const callFn = function() {
+    timer = null;
+    fn.apply(context, args);
+  };
+  return function() {
+    context = this;
+    args = arguments;
+    if(!timer) {
+      clearTimeout(timer);
+      timer = setTimeout(callFn, ms);
+    }
+  };
+}
+
+/**
  * @param  {Date|number} [date]
  * @return {number} returns NaN on exceptional cases.
  */

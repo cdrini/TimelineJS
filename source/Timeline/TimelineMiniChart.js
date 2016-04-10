@@ -1,4 +1,4 @@
-import { ASC, identity } from "../utils";
+import { ASC, identity, throttle } from "../utils";
 
 const ROW_HEIGHT = 5; // px
 const ROW_PADDING = 2; // px;
@@ -19,11 +19,14 @@ export default class TimelineMiniChart {
     this.makeContainer();
     this.makeSVG();
     this.drawSeries();
+    this.makeViewFieldRect();
     this.makeAxis();
 
-    this.updateAxes();
 
-    // this.bindScrollEvents();
+    this.updateAxes();
+    this.updateViewFieldRect();
+
+    this.bindScrollEvents();
   }
 
   makeRoom() {
@@ -113,6 +116,24 @@ export default class TimelineMiniChart {
     return path;
   }
 
+  makeViewFieldRect() {
+    this.viewFieldRect = this.svg.append('rect').classed('viewfield', true);
+  }
+
+  updateViewFieldRect() {
+    const mainChart = this.timelineView.mainChart.container.node();
+    let {width, height} = mainChart.getBoundingClientRect(); // FIXME use 'cached' values
+    width = Math.min(width, this.timelineView.mainChart.svg.node().width.baseVal.value);
+    // FIXME: This is wrong, since it includes the size of the xaxis
+
+    this.viewFieldRect.attr({
+      x: this.xScale(mainChart.scrollLeft),
+      y: this.yScale(mainChart.scrollTop),
+      width: this.xScale(width).toFixed(2) - 1,
+      height: Math.min(this.yScale(height), this.opts.miniChartHeight).toFixed(2) - 1
+    });
+  }
+
   updateAxes() {
     this.fitAxisLabels();
   }
@@ -129,6 +150,10 @@ export default class TimelineMiniChart {
       // right needs to be pushed in
       _getNthTickText(this.axisGroup.node(), -1).style['text-anchor'] = "end";
     }
+  }
+
+  bindScrollEvents() {
+    this.timelineView.mainChart.container.on('scroll', throttle(this.updateViewFieldRect.bind(this), 50));
   }
 }
 
