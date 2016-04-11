@@ -9,7 +9,7 @@
 .tjs-container .tjs-mini .viewfield:active{ stroke-dasharray: 0; cursor: -webkit-grabbing; cursor: grabbing; }
 .tjs-container .tjs-mini .axis .tick text { font-family: Roboto, sans-serif; font-weight: 300; }
 
-.tjs-container .tjs-main                  { width: 100%; height: 100%; overflow: auto; font-family: Roboto, sans-serif; }
+.tjs-container .tjs-main                  { width: 100%; height: 100%; overflow: auto; font-family: Roboto, sans-serif; transform: translateZ(0); }
 .tjs-container .tjs-main .tjs-item rect,
 .tjs-container .tjs-main .tjs-item circle { fill: #FD5; }
 .tjs-container .tjs-main .tjs-item circle { stroke: #C92; }
