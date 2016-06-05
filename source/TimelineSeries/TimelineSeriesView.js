@@ -6,10 +6,8 @@ export default class TimelineSeriesView {
     this.scale = scale;
     this.parent = parent;
     this.opts = opts;
-    this.stacks = {
-      rows: [],
-      nextFreeRow: 0
-    };
+    this.rows = [];
+    this.rows.nextFreeRow = 0;
 
     this.draw();
   }
@@ -37,50 +35,53 @@ export default class TimelineSeriesView {
 /************************* Private helpers *************************/
 
 function _itemTransform(seriesView, item, group) {
-  const { opts, scale, stacks } = seriesView;
+  const { opts, scale, rows } = seriesView;
   const { accessors } = seriesView.series;
 
-  const defaultY = - (stacks.nextFreeRow+1) * opts.itemHeight;
+  const defaultY = - (rows.nextFreeRow+1) * opts.itemHeight;
   const bbox = group.getBBox();
   let finalY = defaultY;
 
   // starting pos of the item
   const itemStart = scale(accessors.start(item));
+  const itemEnd = scale(accessors.end(item));
   const itemPos = {
-    start: itemStart + bbox.x,
-    end:   itemStart + bbox.x + bbox.width,
-    item:  item
+    itemStart: itemStart,
+    itemEnd:   itemEnd,
+    bboxStart: itemStart + bbox.x,
+    bboxEnd:   itemStart + bbox.x + bbox.width,
+    item: item
   };
 
   // first item; add directly
-  if (stacks.nextFreeRow === 0) {
+  if (rows.nextFreeRow === 0) {
     finalY = defaultY;
-    stacks.rows[stacks.nextFreeRow] = [ itemPos ];
-    stacks.nextFreeRow++;
+    rows[rows.nextFreeRow] = [ itemPos ];
+    rows.nextFreeRow++;
   } else {
     let rowWithRoom = -1;
     let indexInRow = -1;
 
     // starting from row 0, check if there is room.
     // sorted interval search over each row
-    for(let i = 0; i < stacks.nextFreeRow; ++i) {
-      const curRow = stacks.rows[i];
+    for(let i = 0; i < rows.nextFreeRow; ++i) {
+      const curRow = rows[i];
 
       // check left
-      if (itemPos.end < curRow[0].start) {
+      if (itemPos.bboxEnd < curRow[0].bboxStart) {
         rowWithRoom = i;
         indexInRow = 0;
         break;
       }
       // check right
-      if (itemPos.start > curRow[curRow.length - 1].end) {
+      if (itemPos.bboxStart > curRow[curRow.length - 1].bboxEnd) {
         rowWithRoom = i;
         indexInRow = curRow.length;
         break;
       }
       // check middle
       for(let j = 0; j < curRow.length - 1; j++) {
-        if (curRow[j].end < itemPos.start && curRow[j+1].start > itemPos.end) {
+        if (curRow[j].bboxEnd < itemPos.bboxStart && curRow[j+1].bboxStart > itemPos.bboxEnd) {
           rowWithRoom = i;
           indexInRow = j+1;
           break;
@@ -95,11 +96,11 @@ function _itemTransform(seriesView, item, group) {
       finalY = - (rowWithRoom+1) * opts.itemHeight;
 
       // insert in row, maintaining sort
-      stacks.rows[rowWithRoom].splice(indexInRow, 0, itemPos);
+      rows[rowWithRoom].splice(indexInRow, 0, itemPos);
     } else {
       finalY = defaultY;
-      stacks.rows[stacks.nextFreeRow] = [ itemPos ];
-      stacks.nextFreeRow++;
+      rows[rows.nextFreeRow] = [ itemPos ];
+      rows.nextFreeRow++;
     }
   }
 

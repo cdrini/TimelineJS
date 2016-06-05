@@ -60,9 +60,9 @@ export function tightwrapViewBox(svg) {
 }
 
 /**
- * Ensures the provided function is never executed more than once every 400 ms
- * (or whatever is provided). Useful as a scroll/resize event handler.
- * @param  {Function} fn      the thing we want to limit calls for
+ * Ensures the provided function is never executed more than once every 50 ms
+ * (or whatever is provided). Useful as a scroll/resize event handler wrapper.
+ * @param  {Function} fn      the thing we want to limit calls to
  * @param  {number}   [ms=50] how frequently the fn can be executed
  * @return {Function}         the handler
  */
@@ -70,18 +70,34 @@ export function throttle(fn, ms=50) {
   let timer = null;
   let context = this,
       args = [];
-  const callFn = function() {
+  const clear = () => {
+    clearTimeout(timer);
     timer = null;
-    fn.apply(context, args);
   };
-  return function() {
+  const handler = function() {
     context = this;
     args = arguments;
     if(!timer) {
-      clearTimeout(timer);
-      timer = setTimeout(callFn, ms);
+      fn.apply(context, args);
+      timer = setTimeout(clear, ms);
     }
   };
+
+  return handler;
+}
+
+/**
+ * Calls the given fn on the next animation frame.
+ * @param  {Function} fn      the thing we want to limit calls to
+ * @return {Function}         the handler
+ */
+export function onAnimationFrame(fn) {
+  if (!window.requestAnimationFrame) return throttle(fn, 40);
+  const handler = function() {
+    window.requestAnimationFrame(() => fn.apply(this, arguments));
+  };
+
+  return handler;
 }
 
 /**

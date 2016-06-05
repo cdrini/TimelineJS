@@ -1,4 +1,4 @@
-import { throttle, tightwrapViewBox } from "../utils";
+import { onAnimationFrame, tightwrapViewBox } from "../utils";
 
 const NAMESPACE = 'tjs-axis';
 
@@ -45,7 +45,7 @@ export default class TimelineAxis {
   mirrorScrolling() {
     const mainChart = this.mainChart.container;
     const svg = this.svg;
-    mainChart.on(`scroll.${NAMESPACE}`, scrollHandler);
+    mainChart.on(`scroll.${NAMESPACE}`, onAnimationFrame(scrollHandler));
 
     function scrollHandler() {
       const scrollLeft = mainChart.node().scrollLeft;
