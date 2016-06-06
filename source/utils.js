@@ -5,7 +5,7 @@ const EPSILON = 1e-10;
 
 /**
  * Numeric Array.sort function which returns results in ascending order.
- * @param {String} [key] if sorting objects, supply the key to use
+ * @param {string} [key] if sorting objects, supply the key to use
  * @example [5,2,1,4].sort(ASC);
  * @example [{x:3},{x:5},{x:1},{x:9}].sort(ASC('x'))
  */
@@ -16,7 +16,7 @@ export function ASC(key) {
 
 /**
  * Numeric Array.sort function which returns results in descending order.
- * @param {String} [key] if sorting objects, supply the key to use
+ * @param {string} [key] if sorting objects, supply the key to use
  * @example [5,2,1,4].sort(DESC);
  * @example [{x:3},{x:5},{x:1},{x:9}].sort(DESC('x'))
  */
@@ -50,20 +50,20 @@ export function isBetween(val, lo, hi) {
  * Check if two values are approximately equal
  * @param  {number} a
  * @param  {number} b
- * @param  {number} [e=EPSILON] definition of 'approximately'. Defaults to a small
- *                              number.
+ * @param  {number} [epsilon=EPSILON] definition of 'approximately'. Defaults
+ *                                    to a small number.
  * @return {Boolean} Whether a is within epsilon of b
  */
-export function approxEqual(a, b, e=EPSILON) {
-  return a == b || isBetween(b, a-EPSILON, a+EPSILON);
+export function approxEqual(a, b, epsilon=EPSILON) {
+  return a == b || isBetween(b, a-epsilon, a+epsilon);
 }
 
 /**
  * Bound val between lo and hi
- * @param {Number} val the number to be bounded
- * @param {Number} lo  lower bound
- * @param {Number} hi  upper bound
- * @return {Number} the bounded number
+ * @param {number} val the number to be bounded
+ * @param {number} lo  lower bound
+ * @param {number} hi  upper bound
+ * @return {number} the bounded number
  */
 export function BOUND(val, lo, hi) {
   return Math.max(lo, Math.min(val, hi));
@@ -71,10 +71,10 @@ export function BOUND(val, lo, hi) {
 
 /**
  * Change an SVG's viewbox to match it's children
- * @param  {D3Select} svg the svg element
+ * @param {D3Select} svg the svg element
  */
 export function tightwrapViewBox(svg) {
-  const bbox = extentBBox(svg.node().children);
+  const bbox = svg.node().getBBox();
   for(const k in bbox) bbox[k] = bbox[k].toFixed(2);
   svg.attr({
     viewBox: `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`,
@@ -112,8 +112,8 @@ export function throttle(fn, ms=50) {
 
 /**
  * Calls the given fn on the next animation frame.
- * @param  {Function} fn      the thing we want to limit calls to
- * @return {Function}         the handler
+ * @param  {Function} fn the thing we want to limit calls to
+ * @return {Function} the handler
  */
 export function onAnimationFrame(fn) {
   if (!window.requestAnimationFrame) return throttle(fn, 40);
@@ -125,7 +125,10 @@ export function onAnimationFrame(fn) {
 }
 
 /**
- * @param  {Date|number} [date]
+ * Convert a date or timestamp to a timestamp. Falls back to a default value if
+ * date is undefined.
+ * @param  {Date|number} date the date to convert
+ * @param  {number|NaN}  [defDate=NaN] default date to use
  * @return {number} returns NaN on exceptional cases.
  */
 export function dateToTimestamp(date, defDate=NaN) {
@@ -135,42 +138,11 @@ export function dateToTimestamp(date, defDate=NaN) {
   else return NaN;
 }
 
-export function makeSVG() {
-  return document.createElementNS("http://www.w3.org/2000/svg", "svg");
-}
-
 /**
  * Converts ms to years
- * @param {Integer} ms
- * @return {Integer} years
+ * @param {number} ms
+ * @return {number} years
  */
 export function msToYears(ms) {
   return ms / 3.15569e10;
-}
-
-/**
- * Determine the BBox containing the BBoxes of all els
- * @param  {SVGElement[]} els
- * @return {BBox}
- */
-export function extentBBox(els) {
-  let minX = Infinity;
-  let minY = Infinity;
-  let maxX = -Infinity;
-  let maxY = -Infinity;
-
-  for(let i = 0; i < els.length; ++i) {
-    const bbox = els[i].getBBox();
-    if (bbox.x < minX) minX = bbox.x;
-    if (bbox.y < minY) minY = bbox.y;
-    if (bbox.x + bbox.width > maxX) maxX = bbox.x + bbox.width;
-    if (bbox.y + bbox.height > maxY) maxY = bbox.y + bbox.height;
-  }
-
-  return {
-    x: minX,
-    y: minY,
-    width: maxX - minX,
-    height: maxY - minY
-  };
 }

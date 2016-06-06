@@ -253,7 +253,7 @@ export default class TimelineMiniChart {
 /**
  * Get the text element of the nth tick
  * @param  {SVGElement} el the axis element containing the ticks
- * @param  {Number} n the index to get. Negatives are removed from end. Must be in range!
+ * @param  {number} n the index to get. Negatives are removed from end. Must be in range!
  * @return {SVGELement|Null} the nth tick text element
  */
 function _getNthTickText(axis, n) {
@@ -264,7 +264,7 @@ function _getNthTickText(axis, n) {
 /**
  * Condenses rows of ranges into n rows
  * @param  {Array[]} rows  Array of array of ranges
- * @param  {Number} n the length of the new array
+ * @param  {number} n the length of the new array
  * @return {Array[]} new array with the desired length
  */
 function _condenseRows(rows, n) {

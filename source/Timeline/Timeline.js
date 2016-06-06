@@ -18,11 +18,11 @@ const DEFAULT_OPTS = {
  * @param {*[]|TimelineSeries[]|TimelineSeries} itemsOrSeries A series, an Array of series, or an
  *                                                            array of plain items
  * @param {Object} opts config object
- *   @param {Integer}   [opts.widthOfYear]
- *   @param {Integer}   [opts.itemHeight]
- *   @param {Integer}   [opts.itemPadding] @todo
- *   @param {Integer}   [opts.padding]
- *   @param {Integer}   [opts.axisLabelSize] @todo
+ *   @param {number}   [opts.widthOfYear]
+ *   @param {number}   [opts.itemHeight]
+ *   @param {number}   [opts.itemPadding] @todo
+ *   @param {number}   [opts.padding]
+ *   @param {number}   [opts.axisLabelSize] @todo
  * @return {Timeline}
  */
 export default class Timeline {
