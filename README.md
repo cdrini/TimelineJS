@@ -1,6 +1,9 @@
 WORK-IN-PROGRESS
 
+[DEMO](https://rawgit.com/cdrini/TimelineJS/master/demo/index.html)
+
 How to use:
+
 Add
 - d3.js
 - dist/Timeline.js
