@@ -8,7 +8,7 @@ var babelify = require('babelify');
 
 gulp.task('babel', function () {
   var b = browserify({
-    entries: 'source/Timeline/Timeline.js',
+    entries: 'source/Timeline.js',
     // debug: true,
     transform: [ babelify ]
   });

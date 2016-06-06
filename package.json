@@ -2,7 +2,7 @@
   "name": "timelinejs",
   "version": "0.0.1",
   "description": "Timeline drawing library",
-  "main": "index.js",
+  "main": "source/Timeline.js",
   "directories": {
     "test": "tests"
   },

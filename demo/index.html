@@ -5,7 +5,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../dist/Timeline.css">
 
     <script src="../dist/Timeline.js" charset="utf-8"></script>
 
@@ -14,11 +14,19 @@
     <script src="main.js" charset="utf-8"></script>
 
     <style>
-      BODY { margin: 0; }
+      BODY { margin: 0; font-family: sans-serif; max-width: 800px; margin: 0 auto; }
     </style>
   </head>
   <body>
-    <div id="bond-films"></div>
-    <div id="tv-shows" style="height:400px;"></div>
+    <h2>James Bond Films</h2>
+    <figure>
+      <div id="bond-films"></div>
+      <figcaption>Timeline of all James Bond Films courtesy <a href="http://tinyurl.com/zgbg46s">Wikidata</a>.</figcaption>
+    </figure>
+    <h2>American TV Shows</h2>
+    <figure>
+      <div id="tv-shows" style="height:400px;"></div>
+      <figcaption>Timeline of all American TV Shows courtesy <a href="http://tinyurl.com/guhsa3r">Wikidata</a>.</figcaption>
+    </figure>
   </body>
 </html>

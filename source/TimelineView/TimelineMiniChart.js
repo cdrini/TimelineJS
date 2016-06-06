@@ -1,7 +1,7 @@
 import { approxEqual, ASC, BOUND, identity, throttle } from "../utils";
 
 const ROW_HEIGHT = 8; // px
-const ROW_PADDING = 4; // px;
+const ROW_PADDING = 4; // px
 
 export default class TimelineMiniChart {
   constructor(timelineView) {

@@ -111,7 +111,8 @@ export function throttle(fn, ms=50) {
 }
 
 /**
- * Calls the given fn on the next animation frame.
+ * Calls the given fn on the next animation frame. Fallsback to throttling if
+ * requestAnimationFrame is not supported.
  * @param  {Function} fn the thing we want to limit calls to
  * @return {Function} the handler
  */

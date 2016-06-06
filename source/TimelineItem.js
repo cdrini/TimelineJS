@@ -63,6 +63,8 @@ export function drawItem(item, accessors, group, scale, opts) {
 }
 
 /************************* Private helpers *************************/
+
+/** Determine the ITEM_TYPE of a given item */
 function itemType(item, accessors) {
   if (accessors.start(item) == accessors.end(item)) return ITEM_TYPES.Point;
   else if (accessors.start(item) < accessors.end(item)) return ITEM_TYPES.Range;

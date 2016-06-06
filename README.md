@@ -1,4 +1,12 @@
+WORK-IN-PROGRESS
 
+How to use:
+Add
+- d3.js
+- dist/Timeline.js
+- dist/Timeline.css
+
+Then do the following:
 ```js
 var data = new TimelineSeries([
   { start: new Date(2000, 1, 1), end: new Date(2008, 2, 4), title: "Event 1" },
@@ -6,14 +14,4 @@ var data = new TimelineSeries([
 ]);
 
 new Timeline(data).drawIn(document.getElementById("timeline"));
-```
-
-
-```js
-Timeline(series);
-Timeline([series]);
-Timeline(series, opts);
-Timeline([series], opts);
-Timeline(series, opts);
-Timeline([series], opts);
 ```

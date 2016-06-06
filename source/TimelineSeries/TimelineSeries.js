@@ -1,21 +1,22 @@
 import { ItemAccessor } from "../TimelineItem.js";
 import TimelineSeriesView from "./TimelineSeriesView.js";
 
+/**
+ * @global
+ * Wrapper class for an array of items that can be drawn in a timeline.
+ */
 export default class TimelineSeries {
   /**
    * @param  {Object[]} items
-   * @param  {Object}   [opts]
    */
-  constructor(items, opts={}) {
+  constructor(items) {
     this.items = items;
     this.accessors = new ItemAccessor();
-    this.opts = Object.assign({}, opts);
-
     this._extent = null;
   }
 
-  draw(scale, parent, opts) {
-    return new TimelineSeriesView(this, scale, parent, opts);
+  draw(scale, parent, timelineOpts) {
+    return new TimelineSeriesView(this, scale, parent, timelineOpts);
   }
 
   // stats

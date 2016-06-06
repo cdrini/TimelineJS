@@ -1,29 +1,27 @@
-import TimelineView from "./TimelineView.js";
-import TimelineSeries from "../TimelineSeries/TimelineSeries.js";
+import TimelineView from "./TimelineView/TimelineView.js";
+import TimelineSeries from "./TimelineSeries/TimelineSeries.js";
 
 /**************** STATIC VARIABLES ****************/
 
 const DEFAULT_OPTS = {
       widthOfYear: 20, //px
        itemHeight: 20, //px
-      itemPadding: 2, //px
+      itemPadding:  2, //px
           padding: 20, //px
     axisLabelSize: 20, //px
   miniChartHeight: 80  //px
 };
 
 /**
- * @class
  * @global
- * @param {*[]|TimelineSeries[]|TimelineSeries} itemsOrSeries A series, an Array of series, or an
- *                                                            array of plain items
- * @param {Object} opts config object
- *   @param {number}   [opts.widthOfYear]
- *   @param {number}   [opts.itemHeight]
- *   @param {number}   [opts.itemPadding] @todo
- *   @param {number}   [opts.padding]
- *   @param {number}   [opts.axisLabelSize] @todo
- * @return {Timeline}
+ * @param {*[]|TimelineSeries[]|TimelineSeries} itemsOrSeries
+ *        A series, an Array of series, or an array of plain items
+ * @param {Object} [opts] config object
+ *   @param {number} [opts.widthOfYear] width (px) of a year
+ *   @param {number} [opts.itemHeight] height (px) of each row
+ *   @param {number} [opts.itemPadding] @todo
+ *   @param {number} [opts.padding] padding of the viz from the left/right
+ *   @param {number} [opts.axisLabelSize] @todo
  */
 export default class Timeline {
   constructor(itemsOrSeries, opts={}) {

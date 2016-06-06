@@ -39,6 +39,7 @@ function _itemTransform(seriesView, item, group) {
   const { accessors } = seriesView.series;
 
   const defaultY = - (rows.nextFreeRow+1) * opts.itemHeight;
+  // FIXME: performance bottle neck; forces a LOT of recalcs
   const bbox = group.getBBox();
   let finalY = defaultY;
 

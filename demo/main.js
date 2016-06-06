@@ -1,8 +1,8 @@
-d3.json("bond films.json", function (json) {
+d3.json("Bond Films.json", function (json) {
   var series = new TimelineSeries(json);
   series.accessors.define({
-    start: d => new Date(d.pubDate).getTime(),
-    end:   d => new Date(d.pubDate).getTime(),
+    start: d => new Date(d.pub).getTime(),
+    end:   d => new Date(d.pub).getTime(),
     title: d => d.filmLabel,
     link:  d => d.film
   });
