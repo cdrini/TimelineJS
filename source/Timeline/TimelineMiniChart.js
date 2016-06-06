@@ -1,4 +1,4 @@
-import { ASC, BOUND, identity, throttle } from "../utils";
+import { approxEqual, ASC, BOUND, identity, throttle } from "../utils";
 
 const ROW_HEIGHT = 8; // px
 const ROW_PADDING = 4; // px;
@@ -26,6 +26,8 @@ export default class TimelineMiniChart {
 
     this.updateAxes();
     this.updateViewFieldRect();
+
+    this.drawNowMarker();
 
     this.bindScrollEvents();
     this.bindDragEvents();
@@ -153,6 +155,19 @@ export default class TimelineMiniChart {
     this.fitAxisLabels();
   }
 
+  drawNowMarker() {
+    const now = Date.now();
+    this.markersGroup = this.svg.append('g').classed('tjs-markers', true);
+    const pos = this.xScale(this.mainChart.scale(now));
+    this.markersGroup.append('line')
+      .classed('tjs-marker', true)
+      .attr({
+        x1: pos.toFixed(2),
+        x2: pos.toFixed(2),
+        y2: this.opts.miniChartHeight.toFixed(2)
+      });
+  }
+
   fitAxisLabels() {
     // Ensure far left/far right fit on screen
     const bbox = this.axisGroup.node().getBBox();
@@ -256,7 +271,7 @@ function _condenseRows(rows, n) {
   const ratio = rows.length / n;
   const result = [];
 
-  for(let i = 0; i < rows.length; i += ratio) {
+  for(let i = 0; !approxEqual(i, rows.length); i += ratio) {
     const newRow = [];
 
     // get the elements from the next desired rows

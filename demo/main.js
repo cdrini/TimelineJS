@@ -12,11 +12,12 @@ d3.json("bond films.json", function (json) {
 
 d3.json("American TV Shows.json", function (json) {
   var series = new TimelineSeries(json);
+  var now = Date.now();
   series.accessors.define({
-    start: d => new Date(d.startTime).getTime(),
-    end:   d => d.endTime ? new Date(d.endTime).getTime() : Date.now(),
-    title: d => d.showLabel,
-    link:  d => d.show
+    start: d => new Date(d.start).getTime(),
+    end:   d => d.end ? new Date(d.end).getTime() : now,
+    title: d => d.xLabel,
+    link:  d => d.x
   });
 
   var tl = new Timeline(series).drawIn(document.getElementById('tv-shows'));

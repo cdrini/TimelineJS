@@ -1,6 +1,7 @@
 export const time = {
   oneYear: 3.154e+10
 };
+const EPSILON = 1e-10;
 
 /**
  * Numeric Array.sort function which returns results in ascending order.
@@ -32,6 +33,29 @@ export function DESC(key) {
  */
 export function identity(x) {
   return x;
+}
+
+/**
+ * Check if val is between the given values
+ * @param  {number}  val the value to check
+ * @param  {number}  lo  the lower boundary
+ * @param  {number}  hi  the upper boundary
+ * @return {Boolean} If val is between lo and hi
+ */
+export function isBetween(val, lo, hi) {
+  return lo < val && val < hi;
+}
+
+/**
+ * Check if two values are approximately equal
+ * @param  {number} a
+ * @param  {number} b
+ * @param  {number} [e=EPSILON] definition of 'approximately'. Defaults to a small
+ *                              number.
+ * @return {Boolean} Whether a is within epsilon of b
+ */
+export function approxEqual(a, b, e=EPSILON) {
+  return a == b || isBetween(b, a-EPSILON, a+EPSILON);
 }
 
 /**

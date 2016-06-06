@@ -4,7 +4,8 @@
                }
 
 .tjs-container .tjs-mini                  { width: 100%; position: absolute; bottom: 0; left: 0; line-height: 0; background-color: #FCFCFC; cursor: move; }
-.tjs-container .tjs-mini .tjs-series-path { stroke: #FEA; shape-rendering: crispEdges; }
+.tjs-container .tjs-mini .tjs-series-path { stroke: #FEA; }
+.tjs-container .tjs-mini .tjs-series-path.tjs-ranges { shape-rendering: crispEdges; }
 .tjs-container .tjs-mini .tjs-series-path.tjs-points { stroke-linecap: round; }
 .tjs-container .tjs-mini .viewfield       { will-change: x, y; fill: #08D; fill-opacity: 0.1; stroke: #08E; stroke-width: 1px; stroke-dasharray: 5,2; shape-rendering: crispEdges; cursor: -webkit-grab; cursor: grab; }
 .tjs-container .tjs-mini .viewfield:active{ stroke-dasharray: 0; cursor: -webkit-grabbing; cursor: grabbing; }
@@ -21,3 +22,5 @@
 .tjs-container .tjs-axis SVG              { will-change: transform; }
 .tjs-container .tjs-axis .axis .tick text { font-family: Roboto, sans-serif; font-weight: 300; }
 .tjs-container .tjs-axis .axis .tick line { stroke-width: 1px; shape-rendering: crispEdges; stroke: #000; }
+
+.tjs-container .tjs-marker                { stroke: #F00; stroke-width: 2px; opacity: 0.3; shape-rendering: crispEdges; }

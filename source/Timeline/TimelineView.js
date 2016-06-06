@@ -13,5 +13,7 @@ export default class TimelineView {
     this.mainChart = new TimelineMainChart(this);
     this.miniChart = new TimelineMiniChart(this);
     this.axis = new TimelineAxis(this);
+
+    this.mainChart.scrollToBottom();
   }
 }
